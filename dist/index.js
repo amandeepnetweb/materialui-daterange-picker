@@ -6238,7 +6238,8 @@ var DateRangePicker = function (props) {
         }
     };
     var setSecondMonthValidated = function (date) {
-        if (dateFns_69(date, firstMonth)) {
+        // Prevent selecting same month or earlier months
+        if (dateFns_69(date, firstMonth) && !dateFns_85(date, firstMonth)) {
             setSecondMonth(date);
         }
     };

@@ -109,7 +109,8 @@ const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = (
   };
 
   const setSecondMonthValidated = (date: Date) => {
-    if (isAfter(date, firstMonth)) {
+    // Prevent selecting same month or earlier months
+    if (isAfter(date, firstMonth) && !isSameMonth(date, firstMonth)) {
       setSecondMonth(date);
     }
   };
