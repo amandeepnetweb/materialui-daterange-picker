@@ -6226,7 +6226,8 @@ var DateRangePicker = function (props) {
     var startDate = dateRange.startDate, endDate = dateRange.endDate;
     // handlers
     var setFirstMonthValidated = function (date) {
-        if (dateFns_70(date, secondMonth)) {
+        // Prevent selecting same month or later months than second month
+        if (dateFns_70(date, secondMonth) && !dateFns_85(date, secondMonth)) {
             setFirstMonth(date);
         }
     };
