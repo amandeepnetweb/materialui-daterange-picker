@@ -14,9 +14,9 @@ import {
   min,
 } from 'date-fns';
 
-// eslint-disable-next-line no-unused-vars
-import { DateRange, NavigationAction, DefinedRange } from '../types';
-import { getValidatedMonths, parseOptionalDate } from '../utils';
+// eslint-disable-next-line no-unused-vars, object-curly-newline
+import { DateRange, NavigationAction, DefinedRange, SameMonth } from '../types';
+import { parseOptionalDate } from '../utils';
 
 import { defaultRanges } from '../defaults';
 
@@ -35,6 +35,7 @@ interface DateRangePickerProps {
   definedRanges?: DefinedRange[];
   minDate?: Date | string;
   maxDate?: Date | string;
+  sameMonth?: SameMonth;
   onChange: (dateRange: DateRange) => void;
 }
 
@@ -50,22 +51,53 @@ const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = (
     minDate,
     maxDate,
     definedRanges = defaultRanges,
+    sameMonth = 'end',
   } = props;
 
   const minDateValid = parseOptionalDate(minDate, addYears(today, -10));
   const maxDateValid = parseOptionalDate(maxDate, addYears(today, 10));
-  const [intialFirstMonth, initialSecondMonth] = getValidatedMonths(
-    initialDateRange || {},
-    minDateValid,
-    maxDateValid,
-  );
 
-  const [dateRange, setDateRange] = React.useState<DateRange>({ ...initialDateRange });
+  const [dateRange, setDateRange] = React.useState<DateRange>({
+    ...initialDateRange,
+  });
   const [hoverDay, setHoverDay] = React.useState<Date>();
-  const [firstMonth, setFirstMonth] = React.useState<Date>(intialFirstMonth || today);
-  const [secondMonth, setSecondMonth] = React.useState<Date>(
-    initialSecondMonth || addMonths(firstMonth, 1),
-  );
+
+  // Helper function to get months based on sameMonth prop
+  const getMonthsForSameMonth = (date: Date): [Date, Date] => {
+    if (sameMonth === 'start') {
+      return [addMonths(date, -1), date];
+    }
+    return [date, addMonths(date, 1)];
+  };
+
+  // Initialize months based on initialDateRange or defaults
+  const [firstMonth, setFirstMonth] = React.useState<Date>(() => {
+    if (initialDateRange?.startDate && initialDateRange?.endDate) {
+      // If initial dates are in the same month
+      if (isSameMonth(initialDateRange.startDate, initialDateRange.endDate)) {
+        const [first] = getMonthsForSameMonth(initialDateRange.startDate);
+        return first;
+      }
+      return initialDateRange.startDate;
+    }
+    // Default behavior based on sameMonth prop
+    const [first] = getMonthsForSameMonth(today);
+    return first;
+  });
+
+  const [secondMonth, setSecondMonth] = React.useState<Date>(() => {
+    if (initialDateRange?.startDate && initialDateRange?.endDate) {
+      // If initial dates are in the same month
+      if (isSameMonth(initialDateRange.startDate, initialDateRange.endDate)) {
+        const [, second] = getMonthsForSameMonth(initialDateRange.startDate);
+        return second;
+      }
+      return initialDateRange.endDate;
+    }
+    // Default behavior based on sameMonth prop
+    const [, second] = getMonthsForSameMonth(today);
+    return second;
+  });
 
   const { startDate, endDate } = dateRange;
 
@@ -92,16 +124,25 @@ const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = (
       setDateRange(range);
       onChange(range);
 
-      setFirstMonth(newStart);
-      setSecondMonth(isSameMonth(newStart, newEnd) ? addMonths(newStart, 1) : newEnd);
+      // When dates are in same month, use sameMonth prop to determine which months to show
+      if (isSameMonth(newStart, newEnd)) {
+        const [first, second] = getMonthsForSameMonth(newStart);
+        setFirstMonth(first);
+        setSecondMonth(second);
+      } else {
+        setFirstMonth(newStart);
+        setSecondMonth(newEnd);
+      }
     } else {
       const emptyRange = {};
 
       setDateRange(emptyRange);
       onChange(emptyRange);
 
-      setFirstMonth(today);
-      setSecondMonth(addMonths(firstMonth, 1));
+      // Show months based on sameMonth prop when range is empty
+      const [first, second] = getMonthsForSameMonth(today);
+      setFirstMonth(first);
+      setSecondMonth(second);
     }
   };
 
@@ -110,8 +151,21 @@ const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = (
       const newRange = { startDate, endDate: day };
       onChange(newRange);
       setDateRange(newRange);
+      // When selecting end date in same month, use sameMonth prop
+      if (isSameMonth(startDate, day)) {
+        const [first, second] = getMonthsForSameMonth(day);
+        setFirstMonth(first);
+        setSecondMonth(second);
+      } else {
+        setFirstMonth(startDate);
+        setSecondMonth(day);
+      }
     } else {
       setDateRange({ startDate: day, endDate: undefined });
+      // When selecting start date, use sameMonth prop
+      const [first, second] = getMonthsForSameMonth(day);
+      setFirstMonth(first);
+      setSecondMonth(second);
     }
     setHoverDay(day);
   };

@@ -15,6 +15,7 @@ import {
   getMonth,
   setYear,
   getYear,
+  parse,
 } from 'date-fns';
 
 const useStyles = makeStyles(() => ({
@@ -57,7 +58,7 @@ const generateYears = (relativeTo: Date, count: number) => {
   const half = Math.floor(count / 2);
   return Array(count)
     .fill(0)
-    .map((_y, i) => relativeTo.getFullYear() - half + i); // TODO: make part of the state
+    .map((_y, i) => parse(relativeTo).getFullYear() - half + i); // TODO: make part of the state
 };
 
 const Header: React.FunctionComponent<HeaderProps> = ({
@@ -79,7 +80,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   };
 
   return (
-    <Grid container justifyContent="space-between" alignItems="center">
+    <Grid container justify="space-between" alignItems="center">
       <Grid item className={classes.iconContainer}>
         <IconButton
           className={classes.icon}

@@ -3,14 +3,16 @@ export interface DateRange {
   endDate?: Date;
 }
 
-export type Setter<T> = React.Dispatch<React.SetStateAction<T>> | ((value: T) => void);
+export type Setter<T> =
+  | React.Dispatch<React.SetStateAction<T>>
+  | ((value: T) => void);
 
 export enum NavigationAction {
   // eslint-disable-next-line no-unused-vars
   Previous = -1,
 
   // eslint-disable-next-line no-unused-vars
-  Next = 1
+  Next = 1,
 }
 
 export type DefinedRange = {
@@ -18,3 +20,5 @@ export type DefinedRange = {
   endDate: Date;
   label: string;
 };
+
+export type SameMonth = 'start' | 'end';
