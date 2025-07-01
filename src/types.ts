@@ -21,4 +21,4 @@ export type DefinedRange = {
   label: string;
 };
 
-export type SameMonth = 'start' | 'end';
+export type CurrentMonth = 'start' | 'end';
