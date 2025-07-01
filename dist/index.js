@@ -6288,18 +6288,8 @@ var DateRangePicker = function (props) {
         }
         else {
             setDateRange({ startDate: day, endDate: undefined });
-            // Don't shift months when selecting start date - keep current view
-            // Only adjust if the clicked day is not visible in current months
-            var dayMonth = day;
-            var isInFirstMonth = dateFns_85(dayMonth, firstMonth);
-            var isInSecondMonth = dateFns_85(dayMonth, secondMonth);
-            if (!isInFirstMonth && !isInSecondMonth) {
-                // Day is not in current view, so we need to adjust
-                var _b = getMonthsForSameMonth(day), first = _b[0], second = _b[1];
-                setFirstMonth(first);
-                setSecondMonth(second);
-            }
-            // If day is already visible, keep current month view
+            // When selecting start date, DON'T automatically shift months
+            // Keep the current month view as is
         }
         setHoverDay(day);
     };
