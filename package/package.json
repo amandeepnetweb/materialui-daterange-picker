@@ -5,9 +5,9 @@
 	"author": "jungsoft",
 	"license": "MIT",
 	"repository": "jungsoft/materialui-daterange-picker",
-	"main": "dist/index.js",
-	"module": "dist/index.es.js",
-	"jsnext:main": "dist/index.es.js",
+	"main": "package/dist/index.js",
+	"module": "package/dist/index.es.js",
+	"jsnext:main": "package/dist/index.es.js",
 	"files": [
 		"dist/",
 		"README.md",
