@@ -6275,8 +6275,19 @@ var DateRangePicker = function (props) {
             var newRange = { startDate: startDate, endDate: day };
             onChange(newRange);
             setDateRange(newRange);
-            // When selecting end date in same month, use sameMonth prop
+            // Only shift months if dates are in same month AND not currently visible properly
             if (dateFns_85(startDate, day)) {
+                // Check if both dates are already visible in current view
+                var startInFirstMonth = dateFns_85(startDate, firstMonth);
+                var startInSecondMonth = dateFns_85(startDate, secondMonth);
+                var dayInFirstMonth = dateFns_85(day, firstMonth);
+                var dayInSecondMonth = dateFns_85(day, secondMonth);
+                // If both dates are already visible in current months, don't shift
+                if ((startInFirstMonth || startInSecondMonth) && (dayInFirstMonth || dayInSecondMonth)) {
+                    // Keep current view - both dates are visible
+                    return;
+                }
+                // Otherwise, apply sameMonth behavior
                 var _a = getMonthsForSameMonth(day), first = _a[0], second = _a[1];
                 setFirstMonth(first);
                 setSecondMonth(second);
@@ -6288,8 +6299,7 @@ var DateRangePicker = function (props) {
         }
         else {
             setDateRange({ startDate: day, endDate: undefined });
-            // When selecting start date, DON'T automatically shift months
-            // Keep the current month view as is
+            // When selecting start date, don't shift months
         }
         setHoverDay(day);
     };
