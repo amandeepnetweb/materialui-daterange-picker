@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DateRange, DefinedRange, SameMonth } from '../types';
+import { DateRange, DefinedRange, CurrentMonth } from '../types';
 export interface DateRangePickerWrapperProps {
     open: boolean;
     toggle: () => void;
@@ -7,7 +7,7 @@ export interface DateRangePickerWrapperProps {
     definedRanges?: DefinedRange[];
     minDate?: Date | string;
     maxDate?: Date | string;
-    sameMonth?: SameMonth;
+    currentMonth?: CurrentMonth;
     onChange: (dateRange: DateRange) => void;
     closeOnClickOutside?: boolean;
     wrapperClassName?: string;

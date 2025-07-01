@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core';
 import DateRangePicker from './DateRangePicker';
 
 // eslint-disable-next-line no-unused-vars
-import { DateRange, DefinedRange, SameMonth } from '../types';
+import { DateRange, DefinedRange, CurrentMonth } from '../types';
 
 const useStyles = makeStyles(() => ({
   dateRangePickerContainer: {
@@ -36,7 +36,7 @@ export interface DateRangePickerWrapperProps {
   definedRanges?: DefinedRange[];
   minDate?: Date | string;
   maxDate?: Date | string;
-  sameMonth?: SameMonth;
+  currentMonth?: CurrentMonth;
   onChange: (dateRange: DateRange) => void;
   closeOnClickOutside?: boolean;
   wrapperClassName?: string;
