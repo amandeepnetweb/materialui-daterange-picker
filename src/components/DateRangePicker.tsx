@@ -162,10 +162,19 @@ const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = (
       }
     } else {
       setDateRange({ startDate: day, endDate: undefined });
-      // When selecting start date, use sameMonth prop
-      const [first, second] = getMonthsForSameMonth(day);
-      setFirstMonth(first);
-      setSecondMonth(second);
+      // Don't shift months when selecting start date - keep current view
+      // Only adjust if the clicked day is not visible in current months
+      const dayMonth = day;
+      const isInFirstMonth = isSameMonth(dayMonth, firstMonth);
+      const isInSecondMonth = isSameMonth(dayMonth, secondMonth);
+
+      if (!isInFirstMonth && !isInSecondMonth) {
+        // Day is not in current view, so we need to adjust
+        const [first, second] = getMonthsForSameMonth(day);
+        setFirstMonth(first);
+        setSecondMonth(second);
+      }
+      // If day is already visible, keep current month view
     }
     setHoverDay(day);
   };
