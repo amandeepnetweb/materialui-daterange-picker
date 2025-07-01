@@ -6182,14 +6182,14 @@ var MARKERS = {
 };
 var DateRangePicker = function (props) {
     var today = new Date();
-    var open = props.open, onChange = props.onChange, initialDateRange = props.initialDateRange, minDate = props.minDate, maxDate = props.maxDate, _a = props.definedRanges, definedRanges = _a === void 0 ? defaultRanges : _a, _b = props.sameMonth, sameMonth = _b === void 0 ? 'end' : _b;
+    var open = props.open, onChange = props.onChange, initialDateRange = props.initialDateRange, minDate = props.minDate, maxDate = props.maxDate, _a = props.definedRanges, definedRanges = _a === void 0 ? defaultRanges : _a, _b = props.currentMonth, currentMonth = _b === void 0 ? 'end' : _b;
     var minDateValid = parseOptionalDate(minDate, dateFns_10(today, -10));
     var maxDateValid = parseOptionalDate(maxDate, dateFns_10(today, 10));
     var _c = useState(__assign({}, initialDateRange)), dateRange = _c[0], setDateRange = _c[1];
     var _d = useState(), hoverDay = _d[0], setHoverDay = _d[1];
     // Helper function to get months based on sameMonth prop
-    var getMonthsForSameMonth = function (date) {
-        if (sameMonth === 'start') {
+    var getMonthsForCurrentMonth = function (date) {
+        if (currentMonth === 'start') {
             return [dateFns_6(date, -1), date];
         }
         return [date, dateFns_6(date, 1)];
@@ -6200,13 +6200,13 @@ var DateRangePicker = function (props) {
         if (((_a = initialDateRange) === null || _a === void 0 ? void 0 : _a.startDate) && ((_b = initialDateRange) === null || _b === void 0 ? void 0 : _b.endDate)) {
             // If initial dates are in the same month
             if (dateFns_85(initialDateRange.startDate, initialDateRange.endDate)) {
-                var first_1 = getMonthsForSameMonth(initialDateRange.startDate)[0];
+                var first_1 = getMonthsForCurrentMonth(initialDateRange.startDate)[0];
                 return first_1;
             }
             return initialDateRange.startDate;
         }
-        // Default behavior based on sameMonth prop
-        var first = getMonthsForSameMonth(today)[0];
+        // Default behavior based on currentMonth prop
+        var first = getMonthsForCurrentMonth(today)[0];
         return first;
     }), firstMonth = _e[0], setFirstMonth = _e[1];
     var _f = useState(function () {
@@ -6214,13 +6214,13 @@ var DateRangePicker = function (props) {
         if (((_a = initialDateRange) === null || _a === void 0 ? void 0 : _a.startDate) && ((_b = initialDateRange) === null || _b === void 0 ? void 0 : _b.endDate)) {
             // If initial dates are in the same month
             if (dateFns_85(initialDateRange.startDate, initialDateRange.endDate)) {
-                var _c = getMonthsForSameMonth(initialDateRange.startDate), second_1 = _c[1];
+                var _c = getMonthsForCurrentMonth(initialDateRange.startDate), second_1 = _c[1];
                 return second_1;
             }
             return initialDateRange.endDate;
         }
-        // Default behavior based on sameMonth prop
-        var _d = getMonthsForSameMonth(today), second = _d[1];
+        // Default behavior based on currentMonth prop
+        var _d = getMonthsForCurrentMonth(today), second = _d[1];
         return second;
     }), secondMonth = _f[0], setSecondMonth = _f[1];
     var startDate = dateRange.startDate, endDate = dateRange.endDate;
@@ -6244,9 +6244,9 @@ var DateRangePicker = function (props) {
             range.endDate = newEnd = dateFns_117(newEnd, maxDateValid);
             setDateRange(range);
             onChange(range);
-            // When dates are in same month, use sameMonth prop to determine which months to show
+            // When dates are in same month, use currentMonth prop to determine which months to show
             if (dateFns_85(newStart, newEnd)) {
-                var _a = getMonthsForSameMonth(newStart), first = _a[0], second = _a[1];
+                var _a = getMonthsForCurrentMonth(newStart), first = _a[0], second = _a[1];
                 setFirstMonth(first);
                 setSecondMonth(second);
             }
@@ -6259,8 +6259,8 @@ var DateRangePicker = function (props) {
             var emptyRange = {};
             setDateRange(emptyRange);
             onChange(emptyRange);
-            // Show months based on sameMonth prop when range is empty
-            var _b = getMonthsForSameMonth(today), first = _b[0], second = _b[1];
+            // Show months based on currentMonth prop when range is empty
+            var _b = getMonthsForCurrentMonth(today), first = _b[0], second = _b[1];
             setFirstMonth(first);
             setSecondMonth(second);
         }
@@ -6282,8 +6282,8 @@ var DateRangePicker = function (props) {
                     // Keep current view - both dates are visible
                     return;
                 }
-                // Otherwise, apply sameMonth behavior
-                var _a = getMonthsForSameMonth(day), first = _a[0], second = _a[1];
+                // Otherwise, apply currentMonth behavior
+                var _a = getMonthsForCurrentMonth(day), first = _a[0], second = _a[1];
                 setFirstMonth(first);
                 setSecondMonth(second);
             }

@@ -13,4 +13,4 @@ export declare type DefinedRange = {
     endDate: Date;
     label: string;
 };
-export declare type SameMonth = 'start' | 'end';
+export declare type CurrentMonth = 'start' | 'end';
